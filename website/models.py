@@ -26,7 +26,8 @@ class Record(db.Model, UserMixin):
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
     hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'))
     date = db.Column(db.DateTime, default=func.now())
-    prescription = db.Column(db.String(50))
+    prescription = db.Column(db.String(256))
+    diagnosis = db.Column(db.String(256))
     patient = db.relationship(
             'Patient',
             backref=db.backref('records', lazy='dynamic'))

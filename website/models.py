@@ -10,7 +10,7 @@ class Patient(db.Model):
     __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50))
-    phone_number = db.Column(db.String(50)) 
+    phone_number = db.Column(db.String(50))
 
 
 class Institution(db.Model):
@@ -26,6 +26,11 @@ class Record(db.Model, UserMixin):
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
     hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'))
     date = db.Column(db.DateTime, default=func.now())
-    prescription = db.Column(db.String(50))
-    patient = db.relationship('Patient', backref=db.backref('records', lazy='dynamic'))
-    hospital = db.relationship('Institution', backref=db.backref('records', lazy='dynamic'))
+    prescription = db.Column(db.String(256))
+    diagnosis = db.Column(db.String(256))
+    patient = db.relationship(
+            'Patient',
+            backref=db.backref('records', lazy='dynamic'))
+    hospital = db.relationship(
+            'Institution',
+            backref=db.backref('records', lazy='dynamic'))

@@ -19,3 +19,12 @@ MediCode is a recording keeping service for health care sector.
 
 ### Health Record
 - patientID, institutionID, date, prescription, diagnosis
+
+## Frontend Dashboard
+
+- Institution signup/signin. Authentication
+- Access patient's records
+    - Input the patient's ID
+    - Fetch records
+- Display patient's records
+- Add a record

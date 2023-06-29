@@ -1,38 +1,34 @@
-import os
 from flask import Flask, request
-from . import db
+import os
+app = Flask(__name__)
 
-@app.route("/ussd", methods = ['POST'])
-def ussd():
-  # Read the variables sent via POST from our API
-  session_id   = request.values.get("sessionId", None)
-  serviceCode  = request.values.get("serviceCode", None)
+response = ""
+
+@app.route('/', methods=['POST', 'GET'])
+def ussd_callback():
+  global response
+  session_id = request.values.get("sessionId", None)
+  service_code = request.values.get("serviceCode", None)
   phone_number = request.values.get("phoneNumber", None)
-  text         = request.values.get("text", "default")
+  text = request.values.get("text", "default")
+  return phone_number
 
-  if text      == '':
-      # This is the first request. Note how we start the response with CON
-      response  = "CON Welcome to medicode \n"
-      response += "1. Register \n"
+  if text == '':
+    response  = "CON welcome to medicode \n"
+    response += "1. Register"
+    
+  elif text == '1':
+    response = "CON Please enter your details:\n"
+    response += "1. Enter your name\n"
+    name = input("")  
+    response += name
+    response += "\n2. Enter your ID\n"
+    id_number = input("")  
+    response += id_number
 
-  elif text    == '1':
-      # Business logic for first level response
-      response  = "CON Choose account information you want to view \n"
-      response += "1. Account number"
+  else:
+      return
 
-  elif text   == '2':
-      # This is a terminal request. Note how we start the response with END
-      response = "END Your phone number is " + phone_number
-
-  elif text          == '1*1':
-      # This is a second level response where the user selected 1 in the first instance
-      accountNumber  = "ACC1001"
-      # This is a terminal request. Note how we start the response with END
-      response       = "END Your account number is " + accountNumber
-
-  else :
-      response = "END Invalid choice"
-
-  # Send the response back to the API
   return response
-
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=os.environ.get('PORT'))

@@ -1,26 +1,44 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from . import db
 from flask_login import UserMixin
-from sqlalchemy import func
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from os import path
+from flask_login import LoginManager
+from flask import Flask, request
+from sqlalchemy import func, Column, String
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+DB_NAME = "medicode.db"
+
+# initialize the app
+app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'supersecretkey?'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+db = SQLAlchemy(app)
+# db.init_app(app)
 
 
-class Patient(db.Model):
+class Patient(Base):
     __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50))
+    id_number = db.Column(db.String(50))
     phone_number = db.Column(db.String(50))
 
 
-class Institution(db.Model):
+class Institution(Base):
     __tablename__ = 'hospital'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     password = db.Column(db.String(50))
 
 
-class Record(db.Model, UserMixin):
+class Record(Base):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
